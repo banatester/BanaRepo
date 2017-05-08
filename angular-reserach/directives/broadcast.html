@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Directives</title>
+</head>
+<body ng-controller="firstCtrl"> 
+<button add-book-button>Add book</button>
+{{mBook}}
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+<script>
+	var app = angular.module("dirApp", []);
+		app.factory('Book', ['$rootScope', function($rootScope){
+    		var objFact = [];
+			objFact.books = [
+        						{ title: "Magician", author: "Raymond E. Feist" },
+        						{ title: "The Hobbit", author: "J.R.R Tolkien" }
+      						];
+			objFact.addBook = function(objBook){
+				objFact.books.push(objBook);
+				$rootScope.$broadcast( 'booksupdate' , objFact.books);
+			}
+			return objFact;
+ 		}]);
+		app.controller("firstCtrl", ["$scope", "Book", function($scope, Book){
+			$scope.mBook = [];
+			$scope.mBook = Book.books;
+			$scope.$on( 'booksupdate', function( event, objd ) {
+     			$scope.mBook = objd;
+				console.log(objd);
+				console.log($scope.mBook);
+   			});
+			
+		}]);
+		app.directive( "addBookButton", [ 'Book', function( Book ) {
+    		return {
+      			restrict: "A",
+      			link: function( scope, element, attrs ) {
+        			element.bind( "click", function() {
+          				Book.addBook( { title: "Star Wars", author: "George Lucas" } );						
+        			});
+      			}
+    		}
+ 		}]);
+		angular.element(document).ready(function(){
+			angular.bootstrap(document, ["dirApp"]);
+		});
+</script>
+</body>
+</html>

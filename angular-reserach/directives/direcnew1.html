@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Directives</title>
+</head>
+<body ng-controller="firstCtrl"> 
+<input type="text" ng-model="dcolor" />
+
+<ng-book name="{{rrr}}" color="dcolor" clicked="randomnum()"></ng-book>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+<script>
+	var app = angular.module("dirApp", []);
+		app.controller("firstCtrl", ["$scope", function($scope){
+			$scope.rrr = "sdfsda";	
+			$scope.dcolor = "#ccc";	
+			$scope.randomnum = function(){
+				$scope.dcolor = angular.uppercase($scope.dcolor); 	
+			}
+		}]);
+		app.directive("ngBook", function(){
+			return{
+				restrict:"E",
+				scope: {
+            		name: "@",
+					color:"=",
+					clicked:"&"
+        		},
+				template:"<h1>{{name}}</h1><br/><input type='text' ng-model='color' /><br/><button ng-click='clicked()'>click</button>"
+			}
+		});
+		angular.element(document).ready(function(){
+			angular.bootstrap(document, ["dirApp"]);
+		});
+</script>
+</body>
+</html>

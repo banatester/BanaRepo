@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Angularjs</title>
+</head>
+<body>
+	<ng-language></ng-language>
+	
+	<script src="../../library/angular.js"></script>
+	<script>
+		var app = angular.module("testApp", []);
+			
+			app.value("abcd", "444");	
+			app.constant("PI", "3.14");		
+			
+			
+			app.config(['$provide',  function($provide){
+				$provide.decorator('abcd', function ($delegate) {
+        			return $delegate + ' World!' 
+    			});
+			}]);
+			
+			app.factory("testFactory", [function(){
+				var objData = [];				
+				var Students = [{name:"Aman1", city:"Noida"}, {name:"Aman1", city:"Noida"}, {name:"Aman1", city:"Noida"}];
+				objData.getStudents = function(){
+					return Students;	
+				}
+				objData.addStudent = function(oname, ocity){
+					Students.push({name:oname, city:ocity});	
+				}
+				return objData;	
+			}]);
+			app.service("testService", [function(){
+				var Students = [{name:"Aman1", city:"Noida"}, {name:"Aman1", city:"Noida"}, {name:"Aman1", city:"Noida"}];
+				this.getStudents = function(){
+					return Students;	
+				}
+				this.addStudent = function(oname, ocity){
+					Students.push({name:oname, city:ocity});	
+				}
+			}]);
+			app.provider("testProvider", [function(){
+				var Students = [{name:"Aman1", city:"Noida4"}, {name:"Aman2", city:"Noida5"}, {name:"Aman3", city:"Noida6"}];
+				this.nnnn = "sf";
+				this.$get = function(){
+					return {
+						getStudents:function(){
+							return Students;	
+						},
+						addStudent:function(oname, ocity){
+							Students.push({name:oname, city:ocity});	
+						}
+					}
+				}
+			}]);
+			
+			app.controller("testCtrl", ['$scope', 'testProvider', "abcd", "PI", function($scope, testProvider, abcd, PI){
+				$scope.liststu = testProvider.getStudents();
+				testProvider.addStudent("sdfds", "dgsd");
+				console.log(abcd);
+			}]);
+			
+			app.directive("ngLanguage", ["PI", "abcd", "testProvider", function(PI, abcd, testProvider){
+				return{		
+					controller:['$scope', function($scope){
+						$scope.users = testProvider.getStudents();
+					}],			
+					template:"<ul><li ng-repeat='user in users'>{{user.name}}{{user.city}}</li></ul>"	
+				}
+			}]);
+			
+			angular.element(document).ready(function(){
+				angular.bootstrap(document, ['testApp']);				
+			});
+	</script>
+</body>
+</html>

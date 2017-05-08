@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Angularjs</title>
+</head>
+<body ng-controller="testCtrl">
+	<input type="text" ng-model="data" />
+    <input type="text" ng-model="colorss" />
+	<ng-english colors="colorss"></ng-english>
+	
+	<script src="../../library/angular.js"></script>
+	<script>
+		var app = angular.module("testApp", []);
+			app.controller("testCtrl", ["$scope", function($scope){
+				$scope.data = "Book Data";	
+				$scope.colorss = "Green";	
+			}]);
+			app.directive("ngNames", function(){
+				return {
+					restrict:"E",
+					scope:false,
+					template:"<h1>{{data}}</h1> <input type='text' ng-model='data' />"	
+				}
+			});
+			app.directive("ngEnglish", function(){
+				return {
+					restrict:"E",
+					scope:{
+						names:"@",
+						colors:"=",
+						test:'reverse'
+					},
+					template:"<h1>{{colors}}</h1> <input type='text' ng-model='colors' />"	
+				}
+			});			
+			angular.element(document).ready(function(){
+				angular.bootstrap(document, ['testApp']);				
+			});
+	</script>
+</body>
+</html>
